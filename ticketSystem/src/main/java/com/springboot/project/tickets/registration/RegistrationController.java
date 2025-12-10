@@ -1,6 +1,7 @@
 package com.springboot.project.tickets.registration;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 
 
 @RestController
@@ -26,7 +26,8 @@ public class RegistrationController {
 
     @PostMapping
     public Registration create(@RequestBody Registration registration) {
-        return registrationRepository.create(registration);
+        String ticketCode = UUID.randomUUID().toString();
+        return registrationRepository.save(new Registration(null, registration.productId(), ticketCode, registration.attendeeName()));
     }
 
     @GetMapping(path = "/{ticketCode}")
@@ -36,8 +37,17 @@ public class RegistrationController {
     }
 
     @PutMapping
-    public Registration update(Registration registration) {
-        return registrationRepository.update(registration);
+    public Registration update(@RequestBody Registration registration) {
+        String ticketCode = registration.ticketCode();
+        var existing = registrationRepository.findByTicketCode(ticketCode)
+                .orElseThrow(() -> new NoSuchElementException("Registration with ticket code " + ticketCode + " not found"));
+
+        return registrationRepository.save(new Registration(
+                existing.Id(),
+                existing.productId(),
+                ticketCode,
+                registration.attendeeName()
+        ));
     }
 
     @DeleteMapping(path = "/{ticketCode}")

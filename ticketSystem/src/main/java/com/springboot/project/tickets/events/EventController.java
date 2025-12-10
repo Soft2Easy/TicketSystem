@@ -3,9 +3,6 @@ package com.springboot.project.tickets.events;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,10 +46,5 @@ public class EventController {
     @GetMapping(path = "/products")
     public List<Product> getProductsByEvent(@RequestParam("eventId") int eventId) {
         return productRepository.findByEventId(eventId);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ErrorResponse handleNoSuchElementException(NoSuchElementException ex) {
-        return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 }
