@@ -7,7 +7,7 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: 4143@Katlego
+      POSTGRES_PASSWORD: root123
       POSTGRES_DB: tickets_db
     ports:
       - '5432:5432'
