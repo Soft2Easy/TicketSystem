@@ -1,0 +1,55 @@
+plugins {
+    id 'org.springframework.boot' version '4.0.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+}
+
+group = 'com.springboot.project'
+version = '0.0.1-SNAPSHOT'
+description = 'Registration module with MongoDB'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)  // Match your Java version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    
+    // MongoDB Database
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Optional: If you want to build a standalone JAR
+bootJar {
+    enabled = true
+    archiveBaseName = 'registration-service'
+}
+
+jar {
+    enabled = false  // Disable plain JAR, use bootJar instead
+}
