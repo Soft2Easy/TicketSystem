@@ -46,3 +46,18 @@ bootJar {
 jar {
     enabled = false  // Disable plain JAR, use bootJar instead
 }
+
+// Spring Boot Docker profile configuration
+bootRun {
+    args = ["--spring.profiles.active=docker"]
+}
+
+// GraalVM Native configuration
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.add("--verbose")
+            buildArgs.add("-Dspring.profiles.active=docker")
+        }
+    }
+}
