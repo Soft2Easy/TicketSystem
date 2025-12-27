@@ -2,6 +2,8 @@ package com.springboot.project.tickets.events;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ public class Product{
     private int id;
 
     @Column(name = "event_id", nullable = false)
+    @JsonProperty("eventId")
     private int eventId;
 
     @Column(nullable = false)

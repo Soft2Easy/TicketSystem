@@ -1,2 +1,13 @@
 spring.application.name=tickets
+
+spring.mongodb.uri=mongodb://ticketsystem-mongo-1:27017/registration
+spring.mongodb.database=registration
+
+tickets.events.url=http://events:8081
+
 server.port=8082
+management.server.port=8082
+
+management.endpoints.web.exposure.include=health,env,beans,conditions,mappings,loggers,metrics
+management.endpoint.health.show-details=always
+management.endpoint.env.show-values=ALWAYS

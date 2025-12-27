@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -35,11 +35,23 @@ public class Event {
     @Column
     private LocalDate endDate;
 
-    public int getId() {
+    public Event() {
+    }
+
+    public Event(Integer id, String name, LocalDate startDate, LocalDate endDate, Organizer organizer, Venue venue) {
+        this.id = id;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.organizer = organizer;
+        this.venue = venue;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

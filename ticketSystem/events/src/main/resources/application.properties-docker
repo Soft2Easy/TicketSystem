@@ -7,7 +7,7 @@ spring.datasource.password=root123
 spring.jpa.hibernate.ddl-auto=none
 spring.jpa.open-in-view=false
 
-spring.sql.init.mode=never
+spring.sql.init.mode=always
 
 server.port=8081
 

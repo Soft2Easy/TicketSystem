@@ -1,13 +1,35 @@
 services:
   mongo:
-    image: mongo
+    image: mongo:latest
+    command: ["mongod", "--bind_ip_all"]
     ports:
       - '27017:27017'
   postgres:
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root123
       POSTGRES_DB: tickets_db
     ports:
       - '5432:5432'
+  events:
+    image: events-service-0.0.1-snapshot
+    build: ./events
+    depends_on:
+      - postgres
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      
+    ports:
+      - '8081:8081'
+  registration:
+    image: registration-service-0.0.1-snapshot
+    build: ./registration
+    depends_on:
+      - mongo
+      - events
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+      - SPRING_MONGODB_URI=mongodb://ticketsystem-mongo-1:27017/registration
+    ports:
+      - '8082:8082'
