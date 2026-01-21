@@ -3,6 +3,7 @@ package com.springboot.project.tickets.events;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,6 +56,16 @@ public Event createEvent(@RequestBody Event event) {
     public List<Event> getEventsByOrganizer(@RequestParam("organizerId")int organizerId) {
         return eventRepository.findByOrganizerId(organizerId);
     }
+
+    @GetMapping(path = "/all-events")
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    @GetMapping("/test")
+public String test() {
+    return "Controller is working";
+}
 
     @GetMapping(path = "/events/{Id}")
     public Event getEventById(@PathVariable("Id") int eventId) {

@@ -61,11 +61,11 @@ bootRun {
 }
 
 // GraalVM Native configuration
-graalvmNative {
-    binaries {
-        main {
-            buildArgs.add("--verbose")
-            buildArgs.add("-Dspring.profiles.active=docker")
-        }
-    }
-}
+//graalvmNative {
+  //  binaries {
+   //     main {
+    //        buildArgs.add("--verbose")
+     //       buildArgs.add("-Dspring.profiles.active=docker")
+      //  }
+   // }
+//}
