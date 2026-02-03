@@ -1,5 +1,6 @@
 package com.springboot.project.tickets.events;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,5 +18,10 @@ public class VenueController {
     @PostMapping("/create")
     public Venue createVenue(@RequestBody Venue venue) {
         return venueRepository.save(venue);
+    }
+
+    @GetMapping("/all")
+    public Iterable<Venue> getAllVenues() {
+        return venueRepository.findAll();
     }
 }

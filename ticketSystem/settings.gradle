@@ -2,3 +2,4 @@ rootProject.name = 'tickets'
 
 include 'events'
 include 'registration'
+include 'commerce'

@@ -1,44 +1,38 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css';
-import EventsDashboard from './components/EventsDashboard';
-import EventDetails from './components/EventDetails';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import EventsDashboard from './components/EventsDashboard';
+import EventPage from './components/EventPage';
+import EventDetails from './components/EventDetails';
+import AddTickets from './components/AddTickets';
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <div className="container">
-            <Link className="navbar-brand" to="/">
-              <i className="bi bi-calendar-event me-2"></i>
-              Event Management System
-            </Link>
-            <div className="navbar-nav">
-              <Link className="nav-link" to="/">
-                <i className="bi bi-house-door me-1"></i>
-                Dashboard
-              </Link>
-            </div>
-          </div>
-        </nav>
-        
-        <div className="container mt-4">
-          <Routes>
-            <Route path="/" element={<EventsDashboard />} />
-            <Route path="/event/:eventId" element={<EventDetails />} />
-          </Routes>
-        </div>
-        
-        <footer className="mt-5 py-3 bg-light border-top">
-          <div className="container text-center">
-            <small className="text-muted">
-              © 2024 Event Management System | All events in South Africa
-            </small>
-          </div>
-        </footer>
-      </div>
+      <Routes>
+
+        {/* Redirect root to dashboard */}
+        <Route path="/" element={<Navigate to="/events" replace />} />
+
+        {/* Dashboard */}
+        <Route path="/events" element={<EventsDashboard />} />
+
+        {/* Create Event */}
+        <Route path="/events/add" element={<EventPage />} />
+
+        {/* Event Details */}
+        <Route path="/events/:id" element={<EventDetails />} />
+
+        {/* Add Tickets */}
+        <Route
+          path="/events/:eventId/products"
+          element={<AddTickets />}
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/events" replace />} />
+
+      </Routes>
     </Router>
   );
 }

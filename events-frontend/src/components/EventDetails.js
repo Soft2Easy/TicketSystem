@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function EventDetails() {
-  const { eventId } = useParams();
+  // ✅ FIX: param name must match route `/events/:id`
+  const { id } = useParams();
 
   const [event, setEvent] = useState(null);
   const [products, setProducts] = useState([]);
@@ -10,9 +12,14 @@ function EventDetails() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!eventId) return;
+    if (!id) {
+      setError('Invalid event ID');
+      setLoading(false);
+      return;
+    }
+
     fetchEventDetails();
-  }, [eventId]);
+  }, [id]);
 
   const fetchEventDetails = async () => {
     try {
@@ -20,28 +27,29 @@ function EventDetails() {
       setError(null);
 
       const [eventResponse, productResponse] = await Promise.all([
-        fetch(`/events/${eventId}`),
-        fetch(`/products?eventId=${eventId}`)
+        fetch(`/events/${id}`),
+        fetch(`/products?eventId=${id}`)
       ]);
 
       if (!eventResponse.ok) {
-        throw new Error('Event not found');
-      }
-
-      if (!productResponse.ok) {
-        throw new Error('Failed to load products');
+        throw new Error(`Event not found (HTTP ${eventResponse.status})`);
       }
 
       const eventData = await eventResponse.json();
-      const productData = await productResponse.json();
-
       setEvent(eventData);
-      setProducts(productData); // <-- list of products
+
+      // Products are optional – don’t fail the page if they error
+      if (productResponse.ok) {
+        const productData = await productResponse.json();
+        setProducts(Array.isArray(productData) ? productData : []);
+      } else {
+        setProducts([]);
+      }
     } catch (err) {
-      console.error('Error fetching details:', err);
+      console.error('Error fetching event details:', err);
       setError(err.message);
     } finally {
-      setLoading(false);
+      setLoading(false); // ✅ prevents infinite spinner
     }
   };
 
@@ -53,6 +61,8 @@ function EventDetails() {
       day: 'numeric'
     });
   };
+
+  // -------------------- UI STATES --------------------
 
   if (loading) {
     return (
@@ -66,7 +76,7 @@ function EventDetails() {
   if (error || !event) {
     return (
       <div className="alert alert-danger">
-        <h4>Event Not Found</h4>
+        <h4>Unable to load event</h4>
         <p>{error || 'The event you are looking for does not exist.'}</p>
         <Link to="/" className="btn btn-primary">
           Back to Dashboard
@@ -92,7 +102,7 @@ function EventDetails() {
           <h5>Organizer</h5>
           <p>
             <strong>{event.organizer?.name}</strong><br />
-            {event.organizer?.description}
+            {event.organizer?.description || 'No description'}
           </p>
 
           <h5>Venue</h5>
@@ -105,7 +115,7 @@ function EventDetails() {
       </div>
 
       {/* Products / Tickets */}
-      {products.length > 0 && (
+      {products.length > 0 ? (
         <div className="card mb-4">
           <div className="card-header bg-success text-white">
             <h3 className="h5 mb-0">Tickets</h3>
@@ -116,7 +126,7 @@ function EventDetails() {
                 <h4>{product.name}</h4>
                 <p>{product.description}</p>
                 <div className="d-flex justify-content-between align-items-center">
-                  <strong>R {product.price.toLocaleString()}</strong>
+                  <strong>R {product.price?.toLocaleString()}</strong>
                   <button className="btn btn-success">
                     Purchase Ticket
                   </button>
@@ -124,6 +134,10 @@ function EventDetails() {
               </div>
             ))}
           </div>
+        </div>
+      ) : (
+        <div className="alert alert-info">
+          No tickets available for this event.
         </div>
       )}
     </div>
