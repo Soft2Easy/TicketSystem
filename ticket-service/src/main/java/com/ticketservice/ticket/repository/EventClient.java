@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface EventClient {
     
     @GetMapping("/events/{id}/exists")
-    ResponseEntity<Void> checkEvent(@PathVariable Long id);
+    ResponseEntity<Void> checkEvent(@PathVariable("id") Long id);
     
 }

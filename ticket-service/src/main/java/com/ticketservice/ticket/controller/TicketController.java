@@ -2,55 +2,47 @@ package com.ticketservice.ticket.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketservice.ticket.model.Ticket;
-import com.ticketservice.ticket.repository.EventClient;
-import com.ticketservice.ticket.repository.TicketRepository;
+import com.ticketservice.ticket.service.TicketService;
 
-import feign.FeignException;
 
-@Controller
+@RestController
 @RequestMapping("/tickets")
 public class TicketController {
     
-    private final TicketRepository ticketRepository;
-    private final EventClient eventClient;
+    private final TicketService ticketService;
     
-    public TicketController(TicketRepository ticketRepository, EventClient eventClient) {
-        
-        this.ticketRepository = ticketRepository;
-        this.eventClient = eventClient;
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     @PostMapping("/create")
     public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
         
-         try {
-            eventClient.checkEvent(ticket.getEventId());
-            
-        } catch (FeignException.NotFound ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+         Ticket savedTicket = ticketService.createTicket(ticket);
 
-        Ticket savedTicket = ticketRepository.save(ticket);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(savedTicket);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTicket);
     }
     
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<Ticket>> getAllTickets() {
-        Iterable<Ticket> tickets = ticketRepository.findAll();
+        Iterable<Ticket> tickets = ticketService.getAllTickets();
         return ResponseEntity.ok(tickets);
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Ticket> getTicketById(@PathVariable Long id) {
 
-    
-    
+        Ticket ticket = ticketService.getTicketById(id);
+
+        return ResponseEntity.ok(ticket);
+    }
 }

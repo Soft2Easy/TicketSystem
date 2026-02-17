@@ -2,6 +2,8 @@ package com.ticketservice.ticket.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +16,7 @@ import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "bookings")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
