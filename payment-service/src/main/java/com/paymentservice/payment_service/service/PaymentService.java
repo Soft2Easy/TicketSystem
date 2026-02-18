@@ -144,7 +144,7 @@ public class PaymentService {
 
     private boolean completePayment(Payment payment, PaymentVerification verification) {
         var data = verification.getData();
-
+ 
         if (!"success".equalsIgnoreCase(data.getStatus())) {
             markFailed(payment, data.getGateway_response());
             return false;
@@ -183,42 +183,44 @@ public class PaymentService {
     }
 
     @Transactional
-    public void processWebhook(String payload, String signature) {
+   public void processWebhook(String payload, String signature) {
 
-        // 1️ Verify signature first
-        if (!isValidSignature(payload, signature)) {
-            throw new IllegalArgumentException("Invalid webhook signature");
-        }
-
-        try {
-            JsonNode root = objectMapper.readTree(payload);
-
-            String event = root.get("event").asText();
-
-            if (!"charge.success".equals(event)) {
-                return; // ignore other events
-            }
-
-            JsonNode data = root.get("data");
-            String reference = data.get("reference").asText();
-
-            Payment payment = paymentRepository
-                    .findByProviderRef(reference)
-                    .orElseThrow(() -> new IllegalStateException("Payment not found"));
-
-            // Idempotency check
-            if (payment.getStatus() == Payment.PaymentStatus.SUCCESS) {
-                return;
-            }
-
-            // Reuse your verification logic
-            verifyPayment(reference);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Webhook processing failed", e);
-        }
+    if (!isValidSignature(payload, signature)) {
+        throw new IllegalArgumentException("Invalid webhook signature");
     }
 
+    try {
+        JsonNode root = objectMapper.readTree(payload);
+
+        String event = root.get("event").asText();
+
+        // Ignore events that are not "payment.success"
+        if (!"payment.success".equals(event)) {
+            return;
+        }
+
+        JsonNode data = root.get("data");
+        String reference = data.get("reference").asText();
+
+        Payment payment = paymentRepository
+                .findByProviderRef(reference)
+                .orElseThrow(() -> new IllegalStateException("Payment not found"));
+
+        // Idempotency check
+        if (payment.getStatus() == Payment.PaymentStatus.SUCCESS) {
+            return;
+        }
+
+        // Reuse your verification logic
+        verifyPayment(reference);
+
+    } catch (Exception e) {
+        throw new RuntimeException("Webhook processing failed", e);
+    }
+}
+
+            
+        
     private boolean isValidSignature(String payload, String signature) {
         try {
             Mac sha512Hmac = Mac.getInstance("HmacSHA512");

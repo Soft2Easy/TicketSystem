@@ -48,8 +48,8 @@ public class EventController {
         return ResponseEntity.ok(updatedEvent);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Void> eventExists(@PathVariable Long id) {
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Void> checkEvent(@PathVariable("id") Long id) {
         boolean exists = eventService.eventExists(id);
         if (exists) {
             return ResponseEntity.ok().build();

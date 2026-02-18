@@ -42,16 +42,9 @@ public class PaymentController {
     public ResponseEntity<Void> handleWebhook(
         @RequestBody String payload,
         @RequestHeader("x-paystack-signature") String signature) {
-        System.out.println("RECIEVING WEBHOOK OF ID: " + payload);
         paymentService.processWebhook(payload, signature);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/")
-    public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("Payment Service is running");
-    }
-
     
     
 }
