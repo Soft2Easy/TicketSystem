@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "../ticket-service"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../payment-service"
+		},
+		{
+			"path": "../Auth-service"
+		},
+		{
+			"path": "../api_gateway"
+		},
+		{
+			"path": "../discovery-server"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"paystack"
+		]
+	}
+}

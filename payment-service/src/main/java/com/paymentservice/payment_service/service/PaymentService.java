@@ -26,8 +26,8 @@ import com.paymentservice.payment_service.model.PaymentVerification;
 import com.paymentservice.payment_service.repository.PaymentRepository;
 
 import jakarta.transaction.Transactional;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class PaymentService {

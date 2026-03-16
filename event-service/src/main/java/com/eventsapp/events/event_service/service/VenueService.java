@@ -1,5 +1,6 @@
 package com.eventsapp.events.event_service.service;
 
+
 import org.springframework.stereotype.Service;
 
 import com.eventsapp.events.event_service.errorHandling.ResourceNotFoundException;
